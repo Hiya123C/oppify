@@ -27,14 +27,29 @@ export default function Page() {
           priority
         />
 
+        <div className="flex flex-row items-center gap-6">
+
         <Link
           href="/login"
-          className="px-8 py-3 rounded-full text-black font-medium
-                     bg-white/20 backdrop-blur-md border border-white/40
-                     shadow-lg hover:bg-white/30 transition-colors"
+          className="bg-white/50 backdrop-blur-md hover:bg-gray-100 text-gray-800 font-semibold py-3 px-6 border border-gray-400 rounded shadow"
         >
           Log In
         </Link>
+
+        <Link
+          href="/signup"
+          className="bg-white/50 backdrop-blur-md hover:bg-gray-100 text-gray-800 font-semibold py-3 px-6 border border-gray-400 rounded shadow"
+        >
+          Sign Up
+        </Link>
+
+        <Link
+          href="/opportunities"
+          className="bg-white/50 backdrop-blur-md hover:bg-gray-100 text-gray-800 font-semibold py-3 px-6 border border-gray-400 rounded shadow"
+        >
+          For Devs only
+        </Link>
+        </div>
       </div>
     </main>
   );
