@@ -1,23 +1,10 @@
+//homepage
 import Image from "next/image";
 import Link from "next/link";
 
 export default function Page() {
   return (
     <main className="relative min-h-screen w-full overflow-hidden flex items-center justify-center">
-      <Image
-        src="/background/x-lines.svg"
-        alt=""
-        fill
-        className="absolute top-0 left-0 object-cover -z-10 pointer-events-none"
-        priority
-      />
-      <Image
-        src="/background/y-lines.svg"
-        alt=""
-        fill
-        className="absolute top-0 left-0 object-cover -z-10 pointer-events-none"
-      />
-
       <div className="flex flex-col items-center gap-6">
         <Image
           src="/oppify-logo.svg"
@@ -26,6 +13,10 @@ export default function Page() {
           height={500}
           priority
         />
+
+        <p className="text-lg text-center text-gray-700">
+        By students, For students.
+        </p>
 
         <div className="flex flex-row items-center gap-6">
 
