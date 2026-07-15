@@ -1,4 +1,5 @@
 //prob the homepage
+//strictly comps, workshops, events
 
 import Image from "next/image";
 import Link from "next/link";
@@ -6,6 +7,7 @@ import Navbar from "@/components/Navbar";
 import OpportunityCard from "@/components/OpportunityCard";
 import FilterBar from "@/components/FilterBar";
 
+//to-change to actual database
 const placeholderOpportunities = [
   { title: "Beach Cleanup Volunteer", description: "Help clean up the coastline with local volunteers.", deadline: "Aug 20", category: "Volunteering" },
   { title: "Robotics Club Recruitment", description: "Join the school robotics team, no experience needed.", deadline: "Sep 5", category: "Club" },
@@ -21,7 +23,7 @@ export default function Page() {
 
       <div className="pt-32 px-10 max-w-5xl mx-auto">
         <h1 className="text-5xl font-bold text-left">
-          Hii, Christine
+          Hello Christine!
         </h1>
         <p className="text-lg text-gray-700 text-left mt-1">
           Find your next opportunity!!
@@ -39,3 +41,4 @@ export default function Page() {
     </main>
   );
 }
+
