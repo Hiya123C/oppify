@@ -35,7 +35,7 @@ export default function RootLayout({
         {/* Inject Google Icons Link Here */}
         <link
           rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,400,0..1,0"
         />
       </head>
       <body className="min-h-full flex flex-col">

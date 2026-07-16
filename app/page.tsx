@@ -35,7 +35,7 @@ export default function Page() {
         </Link>
 
         <Link
-          href="/opportunities"
+          href="/external"
           className="bg-white/50 backdrop-blur-md hover:bg-gray-100 text-gray-800 font-semibold py-3 px-6 border border-gray-400 rounded shadow"
         >
           For Devs only

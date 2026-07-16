@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Navbar() {
   return (
@@ -9,14 +10,24 @@ export default function Navbar() {
                        border border-gray-400
                        rounded-full px-10 py-3
                        shadow-sm">
-        <Link href="/opportunities" className="text-gray-700 hover:text-black hover:scale-105 transition-all duration-200">
-          Opportunities
+
+        <Image
+          src="/oppify-logo.svg"
+          alt="Oppify logo"
+          width={100}
+          height={100}
+          priority
+        />          
+
+{/* maybe merge the external and internal tgt? */}
+        <Link href="/external" className="text-gray-700 text-lg hover:text-black hover:scale-105 transition-all duration-200">
+          External
         </Link>
-        <Link href="/volunteer" className="text-gray-700 hover:text-black hover:scale-105 transition-all duration-200">
-          VIAs
+        <Link href="/internal" className="text-gray-700 text-lg hover:text-black hover:scale-105 transition-all duration-200">
+          Internal
         </Link>
-        <Link href="/contact" className="text-gray-700 hover:text-black hover:scale-105 transition-all duration-200">
-          Contact
+        <Link href="/contact" className="text-gray-700 text-lg hover:text-black hover:scale-105 transition-all duration-200">
+          About Us
         </Link>
       </nav>
 
