@@ -31,7 +31,7 @@ export default function SearchBar<T extends SearchableItem>({ items, onSelect }:
   return (
     <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-full max-w-md px-4">
       {results.length > 0 && (
-        <div className="glass rounded-2xl shadow-lg mb-3 max-h-64 overflow-y-auto">
+        <div className="cards rounded-2xl shadow-lg mb-3 max-h-64 overflow-y-auto">
           {results.map((item) => (
             <button
               key={item.id}
@@ -57,7 +57,7 @@ export default function SearchBar<T extends SearchableItem>({ items, onSelect }:
           placeholder="Search opportunities..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full pl-12 pr-6 py-3 rounded-full glass shadow-lg focus:outline-none focus:ring-2 focus:ring-black/20 transition-all duration-200"
+          className="w-full pl-12 pr-6 py-3 rounded-full ovals shadow-lg focus:outline-none focus:ring-2 focus:ring-black/20 transition-all duration-200"
         />
       </div>
     </div>

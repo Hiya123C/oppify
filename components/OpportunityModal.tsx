@@ -25,7 +25,7 @@ export default function OpportunityModal({ opportunity, onClose }: OpportunityMo
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-lg glass rounded-3xl shadow-xl p-8 animate-popup"
+        className="relative w-full max-w-lg cards rounded-3xl shadow-xl p-8 animate-popup"
       >
         <button
           onClick={onClose}
@@ -69,6 +69,8 @@ export default function OpportunityModal({ opportunity, onClose }: OpportunityMo
             </a>
           </div>
         )}
+
+        {/* add favourite button */}
       </div>
     </div>
   );

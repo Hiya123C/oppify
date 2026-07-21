@@ -1,12 +1,10 @@
-//must change this ui cries
-
 'use client'
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/utils/supabase/client'
 
-const ALLOWED_DOMAIN = '@student.ri.edu.sg' // change to your actual school domain
+const ALLOWED_DOMAIN = '@student.ri.edu.sg'
 
 export default function LoginPage() {
   const [step, setStep] = useState<'email' | 'code'>('email')
@@ -30,12 +28,8 @@ export default function LoginPage() {
     const { error } = await supabase.auth.signInWithOtp({ email })
     setLoading(false)
 
-    if (error) {
-      setError(error.message)
-      return
-    }
-
-    setStep('code')
+    if (error) setError(error.message)
+    else setStep('code')
   }
 
   async function handleVerifyCode(e: React.FormEvent) {
@@ -51,25 +45,23 @@ export default function LoginPage() {
 
     setLoading(false)
 
-    if (error) {
-      setError(error.message)
-      return
+    if (error) setError(error.message)
+    else {
+      router.push('/opportunities')
+      router.refresh()
     }
-
-    router.push('/opportunities')
-    router.refresh()
   }
 
   return (
-    <main className="relative min-h-screen w-full flex items-center justify-center px-4">
-      <div className="w-full max-w-sm bg-white/70 backdrop-blur-xl border border-white/60 rounded-3xl shadow-xl p-8 animate-popup">
-        <h1 className="text-2xl font-bold text-center mb-1">
-          {step === 'email' ? 'Welcome back' : 'Check your email'}
+    <main className="flex items-center justify-center min-h-screen px-4">
+      <div className="w-full max-w-sm bg-white/70 rounded-3xl shadow-xl p-8">
+        <h1 className="text-2xl font-bold text-center mb-2">
+          {step === 'email' ? 'Login' : 'Enter Code'}
         </h1>
         <p className="text-sm text-gray-600 text-center mb-6">
           {step === 'email'
-            ? 'Log in with your school email'
-            : `We sent a code to ${email}`}
+            ? 'Use your RI school email'
+            : `We sent a 6-digit code to ${email}`}
         </p>
 
         {step === 'email' ? (
@@ -79,18 +71,16 @@ export default function LoginPage() {
               placeholder="student@student.ri.edu.sg"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="border border-gray-300 rounded-xl px-4 py-3 bg-white/80 focus:outline-none focus:ring-2 focus:ring-black/20 transition-all duration-200"
+              className="border rounded-xl px-4 py-3 bg-white/80 focus:outline-none focus:ring-2 focus:ring-black/20"
               required
             />
-
             {error && <p className="text-red-500 text-sm">{error}</p>}
-
             <button
               type="submit"
               disabled={loading}
-              className="bg-black text-white rounded-xl py-3 font-semibold hover:bg-gray-800 transition-all duration-200 disabled:opacity-50"
+              className="bg-black text-white rounded-xl py-3 font-semibold hover:bg-gray-800 disabled:opacity-50"
             >
-              {loading ? 'Sending...' : 'Send code'}
+              {loading ? 'Sending...' : 'Send Code'}
             </button>
           </form>
         ) : (
@@ -101,24 +91,21 @@ export default function LoginPage() {
               placeholder="6-digit code"
               value={code}
               onChange={(e) => setCode(e.target.value)}
-              className="border border-gray-300 rounded-xl px-4 py-3 bg-white/80 text-center text-lg tracking-widest focus:outline-none focus:ring-2 focus:ring-black/20 transition-all duration-200"
+              className="border rounded-xl px-4 py-3 bg-white/80 text-center text-lg tracking-widest focus:outline-none focus:ring-2 focus:ring-black/20"
               required
             />
-
             {error && <p className="text-red-500 text-sm">{error}</p>}
-
             <button
               type="submit"
               disabled={loading}
-              className="bg-black text-white rounded-xl py-3 font-semibold hover:bg-gray-800 transition-all duration-200 disabled:opacity-50"
+              className="bg-black text-white rounded-xl py-3 font-semibold hover:bg-gray-800 disabled:opacity-50"
             >
               {loading ? 'Verifying...' : 'Verify & Log In'}
             </button>
-
             <button
               type="button"
               onClick={() => setStep('email')}
-              className="text-sm text-gray-500 hover:text-black transition-all duration-200"
+              className="text-sm text-gray-500 hover:text-black"
             >
               ← Use a different email
             </button>

@@ -14,7 +14,7 @@ export default function Page() {
           priority
         />
 
-        <p className="text-lg text-center text-gray-700">
+        <p className="text-2xl text-center text-gray-700 italic">
         By students, For students.
         </p>
 
@@ -27,15 +27,15 @@ export default function Page() {
           Log In
         </Link>
 
-        <Link
+        {/* <Link
           href="/signup"
           className="bg-white/50 backdrop-blur-md hover:bg-gray-100 text-gray-800 font-semibold py-3 px-6 border border-gray-400 rounded shadow"
         >
           Sign Up
-        </Link>
+        </Link> */}
 
         <Link
-          href="/external"
+          href="/opportunities"
           className="bg-white/50 backdrop-blur-md hover:bg-gray-100 text-gray-800 font-semibold py-3 px-6 border border-gray-400 rounded shadow"
         >
           For Devs only

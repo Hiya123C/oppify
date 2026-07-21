@@ -3,6 +3,27 @@
 import { useState, useMemo } from "react";
 import ScrollingRow from "@/components/ScrollingRow";
 import OpportunityModal from "@/components/OpportunityModal";
+import SearchBar from "@/components/SearchBar";
+import { createClient } from "@/utils/supabase/client";
+
+const supabase = createClient();
+
+async function toggleFavorite(id: string, isFavorited: boolean) {
+  const user = await supabase.auth.getUser();
+  if (!user.data.user) return;
+
+  if (isFavorited) {
+    // remove from favorites
+    await supabase.from("external_favorites")
+      .delete()
+      .eq("user_id", user.data.user.id)
+      .eq("opportunity_id", id);
+  } else {
+    // add to favorites
+    await supabase.from("external_favorites")
+      .insert({ user_id: user.data.user.id, opportunity_id: id });
+  }
+}
 
 type Opportunity = {
   id: string;
@@ -37,7 +58,7 @@ export default function OpportunitiesClient({
     });
   }
 
-  const allOpportunities = useMemo(
+  const allExternalOpportunities = useMemo(
     () => [...newOpportunities, ...prestigiousOpportunities, ...nationalOpportunities],
     [newOpportunities, prestigiousOpportunities, nationalOpportunities]
   );
@@ -45,13 +66,13 @@ export default function OpportunitiesClient({
   const searchResults = useMemo(() => {
     if (!search.trim()) return [];
     const q = search.toLowerCase();
-    return allOpportunities.filter(
+    return allExternalOpportunities.filter(
       (opp) =>
         opp.title.toLowerCase().includes(q) ||
         opp.description.toLowerCase().includes(q) ||
         opp.category?.toLowerCase().includes(q)
     );
-  }, [search, allOpportunities]);
+  }, [search, allExternalOpportunities]);
 
   return (
     <>
@@ -68,20 +89,7 @@ export default function OpportunitiesClient({
         <ScrollingRow title="National" opportunities={nationalOpportunities} favorites={favorites} onToggleFavorite={toggleFavorite} onSelect={setSelected} />
       </div>
 
-      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-full max-w-md px-4">
-        <div className="relative">
-          <span className="material-symbols-outlined absolute -translate-y-1/2 pointer-events-none z-10 left-4 top-1/2 text-gray-500">
-            search
-          </span>
-          <input
-            type="text"
-            placeholder="Search opportunities..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-12 pr-6 py-3 rounded-full bg-white/70 backdrop-blur-md border border-gray-400 shadow-lg focus:outline-none focus:ring-2 focus:ring-black/20 transition-all duration-200"
-          />
-        </div>
-      </div>
+      <SearchBar items={allExternalOpportunities} onSelect={setSelected} />
 
       <OpportunityModal opportunity={selected} onClose={() => setSelected(null)} />
     </>

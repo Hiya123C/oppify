@@ -22,7 +22,7 @@ export default function OpportunityCard({
   return (
     <div
       onClick={onClick}
-      className="w-72 shrink-0 glass rounded-2xl p-5 shadow-sm hover:shadow-md hover:scale-[1.05] transition-all duration-200 cursor-pointer"
+      className="w-72 shrink-0 cards rounded-2xl p-5 shadow-sm hover:shadow-md hover:scale-[1.05] transition-all duration-200 cursor-pointer"
     >
       <div className="flex flex-row justify-between items-start">
         {category && (

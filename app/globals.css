@@ -7,7 +7,8 @@
 
   --light-blue: #AFD8FF;
   --mid-blue: #4CA2F3;
-  --bright-yellow: #FFD900;
+  --bright-yellow: #ffe96f;
+  --muted-yellow: #ffd571;
 }
 
 /* @theme inline {
@@ -59,9 +60,16 @@ body {
   animation-play-state: paused;
 }
 
-.glass {
-  background: rgba(255, 255, 255);
+.ovals {
+  background: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(25px);
   -webkit-backdrop-filter: blur(25px);
-  border: 5px solid var(--bright-yellow);
+  border: 5px solid var(--muted-yellow);
+}
+
+.cards {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  border: 2px solid var(--light-blue);
 }

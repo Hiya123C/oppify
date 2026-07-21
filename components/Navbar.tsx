@@ -6,7 +6,7 @@ export default function Navbar() {
     <>
       <nav className="fixed top-4 sm:top-6 left-1/2 -translate-x-1/2 z-50
                        flex items-center gap-4 sm:gap-6 md:gap-10
-                       glass
+                       ovals
                        rounded-full px-5 sm:px-8 md:px-10 py-2.5 sm:py-3
                        shadow-sm whitespace-nowrap">
 
