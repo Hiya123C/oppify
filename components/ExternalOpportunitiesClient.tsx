@@ -1,29 +1,10 @@
 'use client'
 
-import { useState, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import ScrollingRow from "@/components/ScrollingRow";
 import OpportunityModal from "@/components/OpportunityModal";
 import SearchBar from "@/components/SearchBar";
 import { createClient } from "@/utils/supabase/client";
-
-const supabase = createClient();
-
-async function toggleFavorite(id: string, isFavorited: boolean) {
-  const user = await supabase.auth.getUser();
-  if (!user.data.user) return;
-
-  if (isFavorited) {
-    // remove from favorites
-    await supabase.from("external_favorites")
-      .delete()
-      .eq("user_id", user.data.user.id)
-      .eq("opportunity_id", id);
-  } else {
-    // add to favorites
-    await supabase.from("external_favorites")
-      .insert({ user_id: user.data.user.id, opportunity_id: id });
-  }
-}
 
 type Opportunity = {
   id: string;
@@ -35,11 +16,25 @@ type Opportunity = {
   requirements?: string[];
 };
 
+const favoriteTableCandidates = ["external_favorites"];
+
+function isMissingTableError(error: { message?: string } | null | undefined) {
+  const message = error?.message?.toLowerCase() ?? "";
+  return message.includes("could not find the table") || message.includes("schema cache") || message.includes("relation") || message.includes("does not exist");
+}
+
 type OpportunitiesClientProps = {
   newOpportunities: Opportunity[];
   prestigiousOpportunities: Opportunity[];
   nationalOpportunities: Opportunity[];
 };
+
+function normalizeOpportunity(opp: Opportunity): Opportunity {
+  return {
+    ...opp,
+    id: String(opp.id),
+  };
+}
 
 export default function OpportunitiesClient({
   newOpportunities,
@@ -49,18 +44,138 @@ export default function OpportunitiesClient({
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
   const [search, setSearch] = useState("");
   const [selected, setSelected] = useState<Opportunity | null>(null);
+  const supabase = useMemo(() => createClient(), []);
 
-  function toggleFavorite(id: string) {
+  useEffect(() => {
+    let isActive = true;
+
+    async function loadFavorites() {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (!user) {
+        if (isActive) setFavorites(new Set());
+        return;
+      }
+
+      let favoriteRows: Array<{ opportunity_id: string | number }> | null = null;
+      let favoriteError: { message?: string } | null = null;
+
+      for (const tableName of favoriteTableCandidates) {
+        const { data, error } = await supabase
+          .from(tableName)
+          .select("opportunity_id")
+          .eq("user_id", user.id);
+
+        if (!error) {
+          favoriteRows = data as Array<{ opportunity_id: string | number }> | null;
+          favoriteError = null;
+          break;
+        }
+
+        favoriteError = error;
+        if (!isMissingTableError(error)) {
+          break;
+        }
+      }
+
+      if (!isActive) return;
+
+      if (!favoriteError) {
+        const nextFavorites = new Set(
+          (favoriteRows ?? []).map((row) => String(row.opportunity_id))
+        );
+        setFavorites(nextFavorites);
+      }
+    }
+
+    loadFavorites();
+
+    return () => {
+      isActive = false;
+    };
+  }, [supabase]);
+
+  async function toggleFavorite(id: string) {
+    const normalizedId = String(id);
+    const isFavorited = favorites.has(normalizedId);
+
     setFavorites((prev) => {
       const next = new Set(prev);
-      next.has(id) ? next.delete(id) : next.add(id);
+      isFavorited ? next.delete(normalizedId) : next.add(normalizedId);
       return next;
     });
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) return;
+
+    let didSucceed = false;
+
+    for (const tableName of favoriteTableCandidates) {
+      if (isFavorited) {
+        const { error } = await supabase
+          .from(tableName)
+          .delete()
+          .eq("user_id", user.id)
+          .eq("opportunity_id", normalizedId);
+
+        if (!error) {
+          didSucceed = true;
+          break;
+        }
+
+        if (!isMissingTableError(error)) {
+          break;
+        }
+      } else {
+        const { error } = await supabase.from(tableName).insert({
+          user_id: user.id,
+          opportunity_id: normalizedId,
+        });
+
+        if (!error) {
+          didSucceed = true;
+          break;
+        }
+
+        if (!isMissingTableError(error)) {
+          break;
+        }
+      }
+    }
+
+    if (!didSucceed) {
+      setFavorites((prev) => {
+        const next = new Set(prev);
+        isFavorited ? next.add(normalizedId) : next.delete(normalizedId);
+        return next;
+      });
+    }
   }
 
+  const normalizedNewOpportunities = useMemo(
+    () => newOpportunities.map(normalizeOpportunity),
+    [newOpportunities]
+  );
+  const normalizedPrestigiousOpportunities = useMemo(
+    () => prestigiousOpportunities.map(normalizeOpportunity),
+    [prestigiousOpportunities]
+  );
+  const normalizedNationalOpportunities = useMemo(
+    () => nationalOpportunities.map(normalizeOpportunity),
+    [nationalOpportunities]
+  );
+
   const allExternalOpportunities = useMemo(
-    () => [...newOpportunities, ...prestigiousOpportunities, ...nationalOpportunities],
-    [newOpportunities, prestigiousOpportunities, nationalOpportunities]
+    () => [
+      ...normalizedNewOpportunities,
+      ...normalizedPrestigiousOpportunities,
+      ...normalizedNationalOpportunities,
+    ],
+    [normalizedNewOpportunities, normalizedPrestigiousOpportunities, normalizedNationalOpportunities]
   );
 
   const searchResults = useMemo(() => {
@@ -84,9 +199,9 @@ export default function OpportunitiesClient({
           </p>
         </div>
 
-        <ScrollingRow title="New/Emerging" opportunities={newOpportunities} favorites={favorites} onToggleFavorite={toggleFavorite} onSelect={setSelected} />
-        <ScrollingRow title="Prestigious" opportunities={prestigiousOpportunities} favorites={favorites} onToggleFavorite={toggleFavorite} onSelect={setSelected} />
-        <ScrollingRow title="National" opportunities={nationalOpportunities} favorites={favorites} onToggleFavorite={toggleFavorite} onSelect={setSelected} />
+        <ScrollingRow title="New/Emerging" opportunities={normalizedNewOpportunities} favorites={favorites} onToggleFavorite={toggleFavorite} onSelect={setSelected} />
+        <ScrollingRow title="Prestigious" opportunities={normalizedPrestigiousOpportunities} favorites={favorites} onToggleFavorite={toggleFavorite} onSelect={setSelected} />
+        <ScrollingRow title="National" opportunities={normalizedNationalOpportunities} favorites={favorites} onToggleFavorite={toggleFavorite} onSelect={setSelected} />
       </div>
 
       <SearchBar items={allExternalOpportunities} onSelect={setSelected} />

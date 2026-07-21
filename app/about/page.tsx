@@ -40,7 +40,7 @@ export default function AboutPage() {
 
         {/* Contact */}
         <section className="mt-12">
-          <h2 className="text-2xl font-bold mb-4">Contact</h2>
+          <h2 className="text-2xl font-bold mb-4">Contact Us</h2>
 
           <div className="rounded-2xl p-5 shadow-sm mb-4 cards">
             <h3 className="font-semibold">Want to post an internal opportunity?</h3>

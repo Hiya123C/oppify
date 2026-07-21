@@ -9,9 +9,9 @@ export default async function Page() {
     .from("external_opportunities")
     .select("*");
 
-  const { data: internal } = await supabase
-    .from("internal_opportunities")
-    .select("*");
+  // const { data: , internal } = await supabase
+  //   .from("internal_opportunities")
+  //   .select("*");
 
   const newOpportunities = external?.filter((o) => o.type === "new") ?? [];
   const prestigiousOpportunities = external?.filter((o) => o.type === "prestigious") ?? [];

@@ -41,8 +41,8 @@ export default function ScrollingRow({
               description={opp.description}
               deadline={opp.deadline}
               category={opp.category}
-              isFavorited={favorites.has(opp.id)}
-              onToggleFavorite={() => onToggleFavorite(opp.id)}
+              isFavorited={favorites.has(String(opp.id))}
+              onToggleFavorite={() => onToggleFavorite(String(opp.id))}
               onClick={() => onSelect(opp)}
             />
           ))}

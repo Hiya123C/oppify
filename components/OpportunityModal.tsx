@@ -13,9 +13,12 @@ type Opportunity = {
 type OpportunityModalProps = {
   opportunity: Opportunity | null;
   onClose: () => void;
+  onPrimaryAction?: (opportunity: Opportunity) => void;
+  primaryLabel?: string;
+  primaryButtonClassName?: string;
 };
 
-export default function OpportunityModal({ opportunity, onClose }: OpportunityModalProps) {
+export default function OpportunityModal({ opportunity, onClose, onPrimaryAction, primaryLabel = 'Sign up', primaryButtonClassName }: OpportunityModalProps) {
   if (!opportunity) return null;
 
   return (
@@ -70,7 +73,14 @@ export default function OpportunityModal({ opportunity, onClose }: OpportunityMo
           </div>
         )}
 
-        {/* add favourite button */}
+        {onPrimaryAction ? (
+          <button
+            onClick={() => onPrimaryAction(opportunity)}
+            className={primaryButtonClassName ?? "mt-8 w-full rounded-xl bg-black px-4 py-3 text-sm font-medium text-white hover:bg-black/90"}
+          >
+            {primaryLabel}
+          </button>
+        ) : null}
       </div>
     </div>
   );

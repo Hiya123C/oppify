@@ -1,25 +1,32 @@
-//showcase all volunteer opportunities, timeslots shit liddat
-import Image from "next/image";
-import Link from "next/link";
 import Navbar from "@/components/Navbar";
+import { createClient } from "@/utils/supabase/server";
+import InternalOpportunitiesClient from "@/components/InternalOpportunitiesClient";
 
-export default function Page() {
+export default async function Page() {
+  const supabase = await createClient();
+
+  const { data: opportunities, error } = await supabase
+    .from("internal_opportunities")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  const normalizedOpportunities = (opportunities ?? []).map((opp) => ({
+    id: String(opp.id),
+    title: opp.title ?? "Untitled opportunity",
+    description: opp.description ?? "",
+    deadline: opp.deadline ?? undefined,
+    category: opp.category ?? undefined,
+    link: opp.link ?? undefined,
+    requirements: Array.isArray(opp.requirements) ? opp.requirements : [],
+  }));
+
   return (
-    <main className="relative min-h-screen w-full overflow-hidden flex items-center justify-center">
+    <main className="relative min-h-screen w-full overflow-hidden">
       <Navbar />
-
-      {/* actual content */}
-
-      <div className="pt-32 px-10 max-w-5xl mx-auto">
-        <h1 className="text-5xl font-bold text-left">
-          internal Opportunities
-        </h1>
-        <p className="text-lg text-gray-700 text-left mt-1">
-          random random
-        </p>
-
-      </div>
-
+      <InternalOpportunitiesClient opportunities={normalizedOpportunities} />
+      {error ? (
+        <p className="px-10 pb-10 text-sm text-red-600">Unable to load internal opportunities right now.</p>
+      ) : null}
     </main>
   );
 }
