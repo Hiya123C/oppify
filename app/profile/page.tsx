@@ -1,3 +1,7 @@
+// add personal details
+//add settings (rolling speed)
+// add personalisation of opportunities
+
 import Image from "next/image";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";

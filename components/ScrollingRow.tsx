@@ -1,6 +1,6 @@
 'use client'
 
-import OpportunityCard from "@/components/OpportunityCard";
+import OpportunityCard from "./OpportunityCard";
 
 type Opportunity = {
   id: string;
@@ -15,6 +15,7 @@ type ScrollingRowProps = {
   opportunities: Opportunity[];
   favorites: Set<string>;
   onToggleFavorite: (id: string) => void;
+  onSelect: (opp: Opportunity) => void;
 };
 
 export default function ScrollingRow({
@@ -22,15 +23,17 @@ export default function ScrollingRow({
   opportunities,
   favorites,
   onToggleFavorite,
+  onSelect,
 }: ScrollingRowProps) {
-  // duplicate the list so the loop looks seamless
   const looped = [...opportunities, ...opportunities];
 
   return (
     <section className="mt-12">
-      <h1 className="text-3xl font-bold mb-4">{title}</h1>
-      <div className="overflow-hidden">
-        <div className="marquee-track flex gap-6 w-max">
+      <h1 className="text-3xl font-bold mb-4 px-10 max-w-7xl mx-auto">{title}</h1>
+
+      {/* full-bleed wrapper, breaks out of the padded container */}
+      <div className="w-full overflow-x-hidden overflow-y-visible">
+        <div className="marquee-track flex gap-6 w-max py-6 px-10">
           {looped.map((opp, i) => (
             <OpportunityCard
               key={`${opp.id}-${i}`}
@@ -40,6 +43,7 @@ export default function ScrollingRow({
               category={opp.category}
               isFavorited={favorites.has(opp.id)}
               onToggleFavorite={() => onToggleFavorite(opp.id)}
+              onClick={() => onSelect(opp)}
             />
           ))}
         </div>

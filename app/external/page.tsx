@@ -1,3 +1,5 @@
+//change to opportunities
+
 //prob the homepage
 //strictly comps, workshops, events
 

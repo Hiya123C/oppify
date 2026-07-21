@@ -1,3 +1,5 @@
+//unused
+
 type FilterBarProps = {
   filters?: string[];
 };

@@ -1,7 +1,5 @@
 'use client'
 
-//add a onclick pop-up with more details
-
 type OpportunityCardProps = {
   title: string;
   description: string;
@@ -9,6 +7,7 @@ type OpportunityCardProps = {
   category?: string;
   isFavorited?: boolean;
   onToggleFavorite?: () => void;
+  onClick?: () => void;
 };
 
 export default function OpportunityCard({
@@ -18,9 +17,13 @@ export default function OpportunityCard({
   category,
   isFavorited = false,
   onToggleFavorite,
+  onClick,
 }: OpportunityCardProps) {
   return (
-    <div className="bg-white/50 backdrop-blur-md border border-gray-300 rounded-2xl p-5 shadow-sm hover:shadow-md hover:scale-[1.02] transition-all duration-200 cursor-pointer">
+    <div
+      onClick={onClick}
+      className="w-72 shrink-0 glass rounded-2xl p-5 shadow-sm hover:shadow-md hover:scale-[1.05] transition-all duration-200 cursor-pointer"
+    >
       <div className="flex flex-row justify-between items-start">
         {category && (
           <span className="inline-block text-xs font-medium text-gray-600 bg-white/60 border border-gray-300 rounded-full px-3 py-1 mb-3">
@@ -30,7 +33,7 @@ export default function OpportunityCard({
 
         <button
           onClick={(e) => {
-            e.stopPropagation(); // prevent triggering the card's own click/popup
+            e.stopPropagation();
             onToggleFavorite?.();
           }}
           aria-label="Favorite"
@@ -50,7 +53,7 @@ export default function OpportunityCard({
 
       <h2 className="font-semibold text-lg">{title}</h2>
       <p className="text-sm text-gray-600 mt-1">{description}</p>
-      <p className="text-xs text-gray-500 mt-3">Deadline: {deadline}</p>
+      {/* <p className="text-xs text-gray-500 mt-3">Deadline: {deadline}</p> */}
     </div>
   );
 }

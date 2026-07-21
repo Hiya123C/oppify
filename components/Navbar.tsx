@@ -4,12 +4,11 @@ import Image from "next/image";
 export default function Navbar() {
   return (
     <>
-      <nav className="fixed top-6 left-1/2 -translate-x-1/2 z-50
-                       flex items-center gap-10
-                       bg-white/30 backdrop-blur-md
-                       border border-gray-400
-                       rounded-full px-10 py-3
-                       shadow-sm">
+      <nav className="fixed top-4 sm:top-6 left-1/2 -translate-x-1/2 z-50
+                       flex items-center gap-4 sm:gap-6 md:gap-10
+                       glass
+                       rounded-full px-5 sm:px-8 md:px-10 py-2.5 sm:py-3
+                       shadow-sm whitespace-nowrap">
 
         <Image
           src="/oppify-logo.svg"
@@ -20,13 +19,13 @@ export default function Navbar() {
         />          
 
 {/* maybe merge the external and internal tgt? */}
-        <Link href="/external" className="text-gray-700 text-lg hover:text-black hover:scale-105 transition-all duration-200">
+        <Link href="/opportunities" className="text-gray-700 text-lg hover:text-black hover:scale-105 transition-all duration-200">
           External
         </Link>
         <Link href="/internal" className="text-gray-700 text-lg hover:text-black hover:scale-105 transition-all duration-200">
           Internal
         </Link>
-        <Link href="/contact" className="text-gray-700 text-lg hover:text-black hover:scale-105 transition-all duration-200">
+        <Link href="/about" className="text-gray-700 text-lg hover:text-black hover:scale-105 transition-all duration-200">
           About Us
         </Link>
       </nav>
