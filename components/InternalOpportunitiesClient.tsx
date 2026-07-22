@@ -40,6 +40,9 @@ export default function InternalOpportunitiesClient({ opportunities }: InternalO
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
+      // keep profiles.email in sync with the authenticated email, always
+      await supabase.from("profiles").upsert({ id: user.id, email: user.email });
+
       const profile = await readProfile(supabase, user.id);
       if (isActive) setCurrentProfile(profile);
     }

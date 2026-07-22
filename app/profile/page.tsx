@@ -55,6 +55,8 @@ export default function ProfilePage() {
         return;
       }
 
+      await supabase.from("profiles").upsert({ id: user.id, email: user.email });
+
       const loadedProfile = await readProfile(supabase, user.id);
       if (isActive) setProfile(loadedProfile);
 
