@@ -6,6 +6,7 @@ import OpportunityCard from "@/components/OpportunityCard";
 import { getDefaultProfile, readProfile, saveProfile } from "@/utils/profile";
 import { createClient } from "@/utils/supabase/client";
 
+
 const categories = ["Volunteering", "Hackathon", "Scholarship", "Workshop", "Competition", "Leadership", "Research", "Internship", "STEM", "Computing", "Humanities", "Arts", "Sports", "Community Service"];
 
 type FavoriteOpportunity = {
@@ -39,10 +40,6 @@ export default function ProfilePage() {
   const supabase = useMemo(() => createClient(), []);
 
   useEffect(() => {
-    setProfile(readProfile());
-  }, []);
-
-  useEffect(() => {
     let isActive = true;
 
     async function loadProfileData() {
@@ -57,6 +54,9 @@ export default function ProfilePage() {
         }
         return;
       }
+
+      const loadedProfile = await readProfile(supabase, user.id);
+      if (isActive) setProfile(loadedProfile);
 
       let favoriteRows: Array<{ opportunity_id: string | number }> | null = null;
       let favoriteError: { message?: string } | null = null;
@@ -109,7 +109,7 @@ export default function ProfilePage() {
         if (ids.length > 0) {
           const { data: opportunities } = await supabase
             .from("external_opportunities")
-            .select("id, title, description, deadline, type")
+            .select("id, title, description, deadline, category")
             .in("id", ids);
 
           if (opportunities) {
@@ -119,7 +119,7 @@ export default function ProfilePage() {
                 title: opp.title ?? "Untitled opportunity",
                 description: opp.description ?? "",
                 deadline: opp.deadline ?? undefined,
-                category: opp.type ?? undefined,
+                category: opp.category ?? undefined,
               }))
             );
           } else {
@@ -152,10 +152,16 @@ export default function ProfilePage() {
     };
   }, [supabase]);
 
-  function handleProfileChange(field: "name" | "email" | "contactNumber", value: string) {
+  async function handleProfileChange(field: "name" | "email" | "contactNumber", value: string) {
     const nextProfile = { ...profile, [field]: value };
     setProfile(nextProfile);
-    saveProfile(nextProfile);
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) return;
+
+    await saveProfile(supabase, user.id, nextProfile);
   }
 
   function toggleCategory(cat: string) {
@@ -284,9 +290,9 @@ export default function ProfilePage() {
         </section>
 
         <section>
-          <h2 className="text-2xl font-bold mb-4">Your Favorites</h2>
+          <h2 className="text-2xl font-bold mb-4">Your Favourites</h2>
           {favorites.length === 0 ? (
-            <p className="text-sm text-gray-500">No favorites yet</p>
+            <p className="text-sm text-gray-500">No favourites yet</p>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               {favorites.map((opp) => (

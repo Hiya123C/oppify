@@ -76,11 +76,12 @@ export default function OpportunityModal({ opportunity, onClose, onPrimaryAction
         {onPrimaryAction ? (
           <button
             onClick={() => onPrimaryAction(opportunity)}
-            className={primaryButtonClassName ?? "mt-8 w-full rounded-xl bg-black px-4 py-3 text-sm font-medium text-white hover:bg-black/90"}
+            className={primaryButtonClassName ?? "bg-white/50 backdrop-blur-md hover:bg-gray-100 text-gray-800 font-semibold py-3 px-6 border border-gray-400 rounded shadow"}
           >
             {primaryLabel}
           </button>
         ) : null}
+
       </div>
     </div>
   );

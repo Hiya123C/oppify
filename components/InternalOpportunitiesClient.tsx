@@ -36,7 +36,6 @@ export default function InternalOpportunitiesClient({ opportunities }: InternalO
     setSignupState('submitting');
     setSignupMessage('');
 
-    const profile = readProfile();
     const user = await supabase.auth.getUser();
     const userId = user.data.user?.id ?? null;
 
@@ -46,12 +45,14 @@ export default function InternalOpportunitiesClient({ opportunities }: InternalO
       return;
     }
 
+    const profile = await readProfile(supabase, userId);
+
     const payload = {
       opportunity_id: opportunity.id,
       opportunity_title: opportunity.title,
       user_id: userId,
-      name: profile.name || user.data.user?.user_metadata?.full_name || 'Unknown',
-      email: profile.email || user.data.user?.email || '',
+      name: profile.name || 'Unknown',
+      email: profile.email || '',
       contact_number: profile.contactNumber || '',
       status: 'pending',
     };
@@ -103,7 +104,7 @@ export default function InternalOpportunitiesClient({ opportunities }: InternalO
               key={opp.id}
               type="button"
               onClick={() => setSelected(opp)}
-              className="cards rounded-2xl p-6 shadow-sm text-left transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 hover:mouse-pointer"
+              className="cards rounded-2xl p-6 shadow-sm text-left transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 hover:cursor-pointer"
             >
               <div className="flex items-start justify-between gap-3">
                 {opp.category && (

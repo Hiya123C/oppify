@@ -110,7 +110,16 @@ export default function OpportunitiesClient({
     const {
       data: { user },
     } = await supabase.auth.getUser();
-    if (!user) return;
+
+    if (!user) {
+      console.warn("toggleFavorite: no logged-in user, reverting");
+      setFavorites((prev) => {
+        const next = new Set(prev);
+        isFavorited ? next.add(normalizedId) : next.delete(normalizedId);
+        return next;
+      });
+      return;
+    }
 
     let didSucceed = false;
 
@@ -126,10 +135,8 @@ export default function OpportunitiesClient({
           didSucceed = true;
           break;
         }
-
-        if (!isMissingTableError(error)) {
-          break;
-        }
+        console.error(`toggleFavorite delete error (${tableName}):`, error);
+        if (!isMissingTableError(error)) break;
       } else {
         const { error } = await supabase.from(tableName).insert({
           user_id: user.id,
@@ -140,10 +147,8 @@ export default function OpportunitiesClient({
           didSucceed = true;
           break;
         }
-
-        if (!isMissingTableError(error)) {
-          break;
-        }
+        console.error(`toggleFavorite insert error (${tableName}):`, error);
+        if (!isMissingTableError(error)) break;
       }
     }
 

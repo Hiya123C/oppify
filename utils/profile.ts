@@ -1,10 +1,10 @@
+import type { SupabaseClient } from "@supabase/supabase-js";
+
 export type ProfileData = {
   name: string;
   email: string;
   contactNumber: string;
 };
-
-const PROFILE_STORAGE_KEY = "oppify-profile";
 
 export function getDefaultProfile(): ProfileData {
   return {
@@ -14,29 +14,40 @@ export function getDefaultProfile(): ProfileData {
   };
 }
 
-export function readProfile(): ProfileData {
-  if (typeof window === "undefined") {
+export async function readProfile(
+  supabase: SupabaseClient,
+  userId: string
+): Promise<ProfileData> {
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("name, email, contact_number")
+    .eq("id", userId)
+    .single();
+
+  if (error || !data) {
     return getDefaultProfile();
   }
 
-  try {
-    const raw = window.localStorage.getItem(PROFILE_STORAGE_KEY);
-    if (!raw) return getDefaultProfile();
-
-    const parsed = JSON.parse(raw) as Partial<ProfileData>;
-    return {
-      ...getDefaultProfile(),
-      ...parsed,
-    };
-  } catch {
-    return getDefaultProfile();
-  }
+  return {
+    name: data.name ?? "",
+    email: data.email ?? "",
+    contactNumber: data.contact_number ?? "",
+  };
 }
 
-export function saveProfile(profile: ProfileData) {
-  if (typeof window === "undefined") {
-    return;
-  }
+export async function saveProfile(
+  supabase: SupabaseClient,
+  userId: string,
+  profile: ProfileData
+) {
+  const { error } = await supabase
+    .from("profiles")
+    .update({
+      name: profile.name,
+      email: profile.email,
+      contact_number: profile.contactNumber,
+    })
+    .eq("id", userId);
 
-  window.localStorage.setItem(PROFILE_STORAGE_KEY, JSON.stringify(profile));
+  return { error };
 }
