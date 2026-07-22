@@ -42,12 +42,12 @@ export async function saveProfile(
 ) {
   const { error } = await supabase
     .from("profiles")
-    .update({
+    .upsert({
+      id: userId,
       name: profile.name,
       email: profile.email,
       contact_number: profile.contactNumber,
-    })
-    .eq("id", userId);
+    });
 
   return { error };
 }

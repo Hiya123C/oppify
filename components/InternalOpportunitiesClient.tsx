@@ -1,9 +1,9 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import OpportunityModal from '@/components/OpportunityModal';
 import { createClient } from '@/utils/supabase/client';
-import { readProfile } from '@/utils/profile';
+import { getDefaultProfile, readProfile } from '@/utils/profile';
 
 type Opportunity = {
   id: string;
@@ -30,9 +30,28 @@ export default function InternalOpportunitiesClient({ opportunities }: InternalO
   const [selected, setSelected] = useState<Opportunity | null>(null);
   const [signupState, setSignupState] = useState<'idle' | 'submitting' | 'success'>('idle');
   const [signupMessage, setSignupMessage] = useState('');
+  const [currentProfile, setCurrentProfile] = useState(getDefaultProfile);
   const supabase = useMemo(() => createClient(), []);
 
-  const handleSignup = async (opportunity: Opportunity) => {
+  useEffect(() => {
+    let isActive = true;
+
+    async function loadProfile() {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      const profile = await readProfile(supabase, user.id);
+      if (isActive) setCurrentProfile(profile);
+    }
+
+    loadProfile();
+
+    return () => {
+      isActive = false;
+    };
+  }, [supabase]);
+
+  const handleSignup = async (opportunity: Opportunity, contactInfo: { name: string; email: string; contactNumber: string }) => {
     setSignupState('submitting');
     setSignupMessage('');
 
@@ -45,15 +64,15 @@ export default function InternalOpportunitiesClient({ opportunities }: InternalO
       return;
     }
 
-    const profile = await readProfile(supabase, userId);
+    // const profile = await readProfile(supabase, userId);
 
     const payload = {
       opportunity_id: opportunity.id,
       opportunity_title: opportunity.title,
       user_id: userId,
-      name: profile.name || 'Unknown',
-      email: profile.email || '',
-      contact_number: profile.contactNumber || '',
+      name: contactInfo.name || 'Unknown',
+      email: contactInfo.email || '',
+      contact_number: contactInfo.contactNumber || '',
       status: 'pending',
     };
 
@@ -137,10 +156,14 @@ export default function InternalOpportunitiesClient({ opportunities }: InternalO
       <OpportunityModal
         opportunity={selected}
         onClose={() => setSelected(null)}
-        onPrimaryAction={(opportunity) => {
+        onPrimaryAction={(opportunity, contactInfo) => {
           setSelected(null);
-          handleSignup(opportunity);
+          handleSignup(opportunity, contactInfo);
         }}
+        defaultName={currentProfile.name}
+        defaultEmail={currentProfile.email}
+        defaultContactNumber={currentProfile.contactNumber}
+        contactPersonName="the project lead who posted this"
       />
     </>
   );

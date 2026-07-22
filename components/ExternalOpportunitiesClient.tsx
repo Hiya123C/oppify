@@ -5,6 +5,8 @@ import ScrollingRow from "@/components/ScrollingRow";
 import OpportunityModal from "@/components/OpportunityModal";
 import SearchBar from "@/components/SearchBar";
 import { createClient } from "@/utils/supabase/client";
+import { readProfile } from "@/utils/profile";
+import OnboardingModal from "./OnboardingModal";
 
 type Opportunity = {
   id: string;
@@ -195,11 +197,54 @@ export default function OpportunitiesClient({
     );
   }, [search, allExternalOpportunities]);
 
+  const [userName, setUserName] = useState<string>('');
+
+  useEffect(() => {
+    async function loadName() {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+      const profile = await readProfile(supabase, user.id);
+      setUserName(profile.name || 'there');
+    }
+    loadName();
+  }, [supabase]);
+
+  //onboarding
+  const [showOnboarding, setShowOnboarding] = useState(false);
+  const [userId, setUserId] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function checkOnboarding() {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+      setUserId(user.id);
+
+      const { data } = await supabase
+        .from("profiles")
+        .select("has_onboarded")
+        .eq("id", user.id)
+        .single();
+
+      if (!data?.has_onboarded) {
+        setShowOnboarding(true);
+      }
+    }
+    checkOnboarding();
+  }, [supabase]);
+
+  async function handleOnboardingComplete() {
+    setShowOnboarding(false);
+    if (userId) {
+      await supabase.from("profiles").upsert({ id: userId, has_onboarded: true });
+    }
+  }
+
   return (
     <>
+      {showOnboarding && <OnboardingModal onComplete={handleOnboardingComplete} />}
       <div className="pt-32 pb-32">
         <div className="px-10 max-w-7xl mx-auto">
-          <h1 className="text-5xl font-bold text-left">Hello Christine!</h1>
+          <h1 className="text-5xl font-bold text-left">Hello {userName || '...'}!</h1>
           <p className="text-lg text-gray-700 text-left mt-1">
             Find your next opportunity!
           </p>
