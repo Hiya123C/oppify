@@ -1,8 +1,13 @@
-//homepage
+'use client'
+
+import { useState } from 'react'
 import Image from "next/image";
 import Link from "next/link";
+import LoginForm from "@/components/LoginForm";
 
 export default function Page() {
+  const [showLogin, setShowLogin] = useState(false);
+
   return (
     <main className="relative min-h-screen w-full overflow-hidden flex items-center justify-center">
       <div className="flex flex-col items-center gap-6">
@@ -20,19 +25,18 @@ export default function Page() {
 
         <div className="flex flex-row items-center gap-6">
 
-        <Link
-          href="/login"
-          className="bg-white/50 backdrop-blur-md hover:bg-gray-100 text-gray-800 font-semibold py-3 px-6 border border-gray-400 rounded shadow"
-        >
-          Log In
-        </Link>
+        {!showLogin ? (
+          <button
+            onClick={() => setShowLogin(true)}
+            className="cards font-semibold py-3 px-6 rounded shadow hover:bg-white/70 transition-all duration-200 animate-popup"
+          >
+            Log In
+          </button>
+        ) : (
+          <LoginForm onCancel={() => setShowLogin(false)} />
+        )}
 
-        {/* <Link
-          href="/signup"
-          className="bg-white/50 backdrop-blur-md hover:bg-gray-100 text-gray-800 font-semibold py-3 px-6 border border-gray-400 rounded shadow"
-        >
-          Sign Up
-        </Link> */}
+        
 
         <Link
           href="/opportunities"

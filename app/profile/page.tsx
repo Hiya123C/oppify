@@ -213,9 +213,14 @@ export default function ProfilePage() {
         <section>
           <h1 className="text-4xl font-bold mb-6">Your Profile</h1>
 
-          <div className="cards rounded-2xl p-6 space-y-5">
+          <div className="cards rounded-2xl p-6">
+            <h3 className="text-xl font-bold">Personal Information</h3>
+            <p className="text-sm text-gray-600">
+              This information will be used to sign up for internal school opportunities.
+            </p>
+            <div className="space-y-4">
             <div>
-              <label className="text-sm font-medium text-gray-700">Name</label>
+              <label className="text-sm text-gray-700 font-bold">Name (Actual name)</label>
               <input
                 type="text"
                 value={profile.name}
@@ -225,7 +230,7 @@ export default function ProfilePage() {
             </div>
 
             <div>
-              <label className="text-sm font-medium text-gray-700">Email</label>
+              <label className="text-sm text-gray-700 font-bold">Email</label>
               <input
                 type="email"
                 value={profile.email}
@@ -235,7 +240,7 @@ export default function ProfilePage() {
             </div>
 
             <div>
-              <label className="text-sm font-medium text-gray-700">Contact number</label>
+              <label className="text-sm text-gray-700 font-bold">Contact number</label>
               <input
                 type="tel"
                 value={profile.contactNumber}
@@ -263,6 +268,7 @@ export default function ProfilePage() {
                   +
                 </button>
               </div>
+            </div>
             </div>
           </div>
         </section>

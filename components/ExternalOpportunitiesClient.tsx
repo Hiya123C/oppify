@@ -98,6 +98,7 @@ export default function OpportunitiesClient({
   }, [supabase]);
 
   async function toggleFavorite(id: string) {
+    console.log("heart clicked!!", id);
     const normalizedId = String(id);
     const isFavorited = favorites.has(normalizedId);
 

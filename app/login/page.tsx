@@ -1,3 +1,5 @@
+//unused
+
 'use client'
 
 import { useState } from 'react'
@@ -19,10 +21,11 @@ export default function LoginPage() {
     e.preventDefault()
     setError(null)
 
-    if (!email.toLowerCase().endsWith(ALLOWED_DOMAIN)) {
-      setError(`Please use your RI school email (${ALLOWED_DOMAIN})`)
-      return
-    }
+    //TODO: uncomment this ltr after auth settled
+    // if (!email.toLowerCase().endsWith(ALLOWED_DOMAIN)) {
+    //   setError(`Please use your RI school email (${ALLOWED_DOMAIN})`)
+    //   return
+    // }
 
     setLoading(true)
     const { error } = await supabase.auth.signInWithOtp({ email })
