@@ -31,7 +31,6 @@ export default function ScrollingRow({
     <section className="mt-12">
       <h1 className="text-3xl font-bold mb-4 px-10 max-w-7xl mx-auto">{title}</h1>
 
-      {/* full-bleed wrapper, breaks out of the padded container */}
       <div className="w-full overflow-x-hidden overflow-y-visible">
         <div className="marquee-track flex gap-6 w-max py-6 px-10">
           {looped.map((opp, i) => (

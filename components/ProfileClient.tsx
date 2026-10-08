@@ -85,14 +85,14 @@ export default function ProfileClient({
             />
           </div>
 
-          <div>
+          {/* <div>
             <label className="text-sm font-medium text-gray-700">Card scroll speed</label>
             <div className="flex items-center gap-4 mt-2">
               <button onClick={() => setRollingSpeed((s) => Math.min(s + 5, 80))} className="glass w-9 h-9 rounded-full flex items-center justify-center text-lg hover:scale-105 transition-all duration-200">−</button>
               <span className="text-sm w-20 text-center">{rollingSpeed}s / loop</span>
               <button onClick={() => setRollingSpeed((s) => Math.max(s - 5, 15))} className="glass w-9 h-9 rounded-full flex items-center justify-center text-lg hover:scale-105 transition-all duration-200">+</button>
             </div>
-          </div>
+          </div> */}
 
           <button
             onClick={saveProfile}

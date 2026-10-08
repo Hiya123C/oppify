@@ -51,7 +51,8 @@ export default function AboutPage() {
               href="mailto:internal@oppify.com?subject=Internal Opportunity Posting"
               className="inline-block mt-3 text-sm text-blue-600 hover:underline"
             >
-              internal@oppify.com
+              27ychri686g@student.ri.edu.sg
+              {/* internal@oppify.com */}
             </a>
           </div>
 
@@ -64,7 +65,7 @@ export default function AboutPage() {
               href="mailto:hello@oppify.com?subject=General Inquiry"
               className="inline-block mt-3 text-sm text-blue-600 hover:underline"
             >
-              hello@oppify.com
+              27ychri686g@student.ri.edu.sg
             </a>
           </div>
         </section>

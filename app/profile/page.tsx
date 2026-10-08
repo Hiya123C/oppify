@@ -251,7 +251,7 @@ export default function ProfilePage() {
               />
             </div>
 
-            <div>
+            {/* <div>
               <div className="flex items-center gap-3 mt-2">
               <label className="text-md text-gray-700">
                 Scroll Speed: {rollingSpeed}s
@@ -270,12 +270,14 @@ export default function ProfilePage() {
                   +
                 </button>
               </div>
-            </div>
+            </div> */}
             </div>
           </div>
         </section>
 
-        <section>
+        {/* do this personalisation... later on */}
+
+        {/* <section>
           <h2 className="text-2xl font-bold mb-4">Your Interests</h2>
           <p className="text-sm text-gray-600 mb-4">
             Select categories to personalize your opportunity feed.
@@ -295,7 +297,7 @@ export default function ProfilePage() {
               </button>
             ))}
           </div>
-        </section>
+        </section> */}
 
         <section>
           <h2 className="text-2xl font-bold mb-4">Your Favourites</h2>

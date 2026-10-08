@@ -27,7 +27,7 @@ function isMissingTableError(error: { message?: string } | null | undefined) {
 
 type OpportunitiesClientProps = {
   newOpportunities: Opportunity[];
-  prestigiousOpportunities: Opportunity[];
+  internationalOpportunities: Opportunity[];
   nationalOpportunities: Opportunity[];
 };
 
@@ -40,7 +40,7 @@ function normalizeOpportunity(opp: Opportunity): Opportunity {
 
 export default function OpportunitiesClient({
   newOpportunities,
-  prestigiousOpportunities,
+  internationalOpportunities,
   nationalOpportunities,
 }: OpportunitiesClientProps) {
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
@@ -168,9 +168,9 @@ export default function OpportunitiesClient({
     () => newOpportunities.map(normalizeOpportunity),
     [newOpportunities]
   );
-  const normalizedPrestigiousOpportunities = useMemo(
-    () => prestigiousOpportunities.map(normalizeOpportunity),
-    [prestigiousOpportunities]
+  const normalizedInternationalOpportunities = useMemo(
+    () => internationalOpportunities.map(normalizeOpportunity),
+    [internationalOpportunities]
   );
   const normalizedNationalOpportunities = useMemo(
     () => nationalOpportunities.map(normalizeOpportunity),
@@ -180,10 +180,10 @@ export default function OpportunitiesClient({
   const allExternalOpportunities = useMemo(
     () => [
       ...normalizedNewOpportunities,
-      ...normalizedPrestigiousOpportunities,
+      ...normalizedInternationalOpportunities,
       ...normalizedNationalOpportunities,
     ],
-    [normalizedNewOpportunities, normalizedPrestigiousOpportunities, normalizedNationalOpportunities]
+    [normalizedNewOpportunities, normalizedInternationalOpportunities, normalizedNationalOpportunities]
   );
 
   const searchResults = useMemo(() => {
@@ -250,8 +250,8 @@ export default function OpportunitiesClient({
           </p>
         </div>
 
-        <ScrollingRow title="New/Emerging" opportunities={normalizedNewOpportunities} favorites={favorites} onToggleFavorite={toggleFavorite} onSelect={setSelected} />
-        <ScrollingRow title="Prestigious" opportunities={normalizedPrestigiousOpportunities} favorites={favorites} onToggleFavorite={toggleFavorite} onSelect={setSelected} />
+        <ScrollingRow title="New" opportunities={normalizedNewOpportunities} favorites={favorites} onToggleFavorite={toggleFavorite} onSelect={setSelected} />
+        <ScrollingRow title="International" opportunities={normalizedInternationalOpportunities} favorites={favorites} onToggleFavorite={toggleFavorite} onSelect={setSelected} />
         <ScrollingRow title="National" opportunities={normalizedNationalOpportunities} favorites={favorites} onToggleFavorite={toggleFavorite} onSelect={setSelected} />
       </div>
 

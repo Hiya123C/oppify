@@ -14,7 +14,7 @@ export default async function Page() {
   //   .select("*");
 
   const newOpportunities = external?.filter((o) => o.type === "new") ?? [];
-  const prestigiousOpportunities = external?.filter((o) => o.type === "prestigious") ?? [];
+  const internationalOpportunities = external?.filter((o) => o.type === "international") ?? [];
   const nationalOpportunities = external?.filter((o) => o.type === "national") ?? [];
 
   return (
@@ -22,7 +22,7 @@ export default async function Page() {
       <Navbar />
       <OpportunitiesClient
         newOpportunities={newOpportunities}
-        prestigiousOpportunities={prestigiousOpportunities}
+        internationalOpportunities={internationalOpportunities}
         nationalOpportunities={nationalOpportunities}
       />
     </main>
