@@ -10,22 +10,22 @@ const slides = [
   {
     icon: "waving_hand",
     title: "Welcome to Oppify!",
-    body: "We help you discover opportunities tailored to you, from competitions to volunteering, all in one place.",
+    body: "We help you discover opportunities tailored to you, from competitions to volunteering, STEM or Humanities, all in one place.",
   },
   {
     icon: "travel_explore",
     title: "External Opportunities",
-    body: "Competitions, scholarships and workshops from outside RI, curated and posted by the Oppify team.",
+    body: "Competitions, scholarships and workshops, curated and posted by the Oppify team.",
   },
   {
     icon: "groups",
     title: "Internal Opportunities",
-    body: "Posted by your schoolmates: project teammates wanted, feedback requests and volunteering asks from within RI.",
+    body: "Posted by your schoolmates or teachers: project teammates wanted, feedback requests and CE volunteering opportunities from within RI.",
   },
   {
     icon: "contact_page",
     title: "Your Information",
-    body: "When you sign up for an internal opportunity, your name, email and contact number are shared only with the person organizing it, so they can reach you. Next, we'll set up your profile. If you want to post your own opportunity, feel free to reach out via the Contact section under About Us.",
+    body: "When you sign up for an internal opportunity, your name, email and contact number are shared only with the person organizing it, so they can reach you. If you want to post your own opportunity, feel free to reach out via the Contact section under About Us.",
   },
 ];
 

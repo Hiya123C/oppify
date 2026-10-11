@@ -250,8 +250,8 @@ export default function OpportunitiesClient({
       <div className="pt-32 pb-32">
         <div className="px-10 max-w-7xl mx-auto">
           {/* <h1 className="text-5xl font-bold text-left">Hello {userName || '...'}!</h1> */}
-          <h1 className="lg:text-5xl text-4xl font-bold text-left ">Hello there!</h1>
-          <p className="text-lg text-gray-700 text-left mt-1">
+          <h1 className="lg:text-5xl text-3xl font-bold text-left ">Hello there!</h1>
+          <p className="lg:text-lg text-md text-gray-700 text-left mt-1">
             Find your next opportunity!
           </p>
         </div>
