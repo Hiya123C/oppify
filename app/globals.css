@@ -86,11 +86,18 @@ body {
 }
 
 .marquee-track {
-  animation: scroll-left 40s linear infinite;
+  animation: scroll-left var(--marquee-duration, 40s) linear infinite;
+  will-change: transform;
 }
 
-.marquee-track:hover {
-  animation-play-state: paused;
+@media (hover: hover) {
+  .marquee-row:hover .marquee-track {
+    animation-play-state: paused;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track { animation: none; }
 }
 
 .ovals {

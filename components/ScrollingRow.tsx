@@ -18,6 +18,10 @@ type ScrollingRowProps = {
   onSelect: (opp: Opportunity) => void;
 };
 
+const MIN_CARDS = 8;
+const CARD_STEP_PX = 312;
+const SPEED_PX_PER_SEC = 40;
+
 export default function ScrollingRow({
   title,
   opportunities,
@@ -25,25 +29,34 @@ export default function ScrollingRow({
   onToggleFavorite,
   onSelect,
 }: ScrollingRowProps) {
-  const looped = [...opportunities, ...opportunities];
+  if (opportunities.length === 0) return null;
+
+  const repeats = Math.ceil(MIN_CARDS / opportunities.length);
+  const base = Array.from({ length: repeats }).flatMap(() => opportunities);
+  const looped = [...base, ...base];
+  const duration = (base.length * CARD_STEP_PX) / SPEED_PX_PER_SEC;
 
   return (
     <section className="mt-12">
-      <h1 className="text-3xl font-bold mb-4 px-10 max-w-7xl mx-auto">{title}</h1>
+      <h2 className="lg:text-3xl text-2xl font-bold mb-4 px-6 sm:px-10 max-w-7xl mx-auto">{title}</h2>
 
-      <div className="w-full overflow-x-hidden overflow-y-visible">
-        <div className="marquee-track flex gap-6 w-max py-6 px-10">
+      <div className="marquee-row w-full overflow-x-hidden overflow-y-visible">
+        <div
+          className="marquee-track flex w-max py-6"
+          style={{ ["--marquee-duration" as string]: `${duration}s` }}
+        >
           {looped.map((opp, i) => (
-            <OpportunityCard
-              key={`${opp.id}-${i}`}
-              title={opp.title}
-              description={opp.description}
-              deadline={opp.deadline}
-              category={opp.category}
-              isFavorited={favorites.has(String(opp.id))}
-              onToggleFavorite={() => onToggleFavorite(String(opp.id))}
-              onClick={() => onSelect(opp)}
-            />
+            <div key={`${opp.id}-${i}`} className="pr-6 flex" aria-hidden={i >= base.length}>
+              <OpportunityCard
+                title={opp.title}
+                description={opp.description}
+                deadline={opp.deadline}
+                category={opp.category}
+                isFavorited={favorites.has(String(opp.id))}
+                onToggleFavorite={() => onToggleFavorite(String(opp.id))}
+                onClick={() => onSelect(opp)}
+              />
+            </div>
           ))}
         </div>
       </div>

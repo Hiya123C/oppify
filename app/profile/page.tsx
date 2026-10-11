@@ -281,7 +281,7 @@ export default function ProfilePage() {
       <div className="pt-32 pb-32 px-6 sm:px-10 lg:px-16 max-w-5xl mx-auto space-y-16">
 
         <section>
-          <h1 className="text-4xl font-bold mb-6">Your Profile</h1>
+          <h1 className="lg:text-5xl text-4xl font-bold mb-6">Your Profile</h1>
 
           {/* for onboarding */}
           {showSetup && (
@@ -297,7 +297,7 @@ export default function ProfilePage() {
           )}
 
           <div className="cards rounded-2xl p-6">
-            <h3 className="text-xl font-bold">Personal Information</h3>
+            <h3 className="lg:text-xl text-lg font-bold">Personal Information</h3>
             <p className="text-sm text-gray-600">
               This information will be used to sign up for internal school opportunities.
             </p>
@@ -400,7 +400,7 @@ export default function ProfilePage() {
         </section> */}
 
         <section>
-          <h2 className="text-2xl font-bold mb-4">Your Favourites</h2>
+          <h2 className="lg:text-2xl text-xl font-bold mb-4">Your Favourites</h2>
           {isLoading ? (
             <div className="grid grid-cols-[repeat(auto-fill,minmax(240px,1fr))] gap-4">
               {[0, 1, 2].map((i) => <SkeletonCard key={i} fullWidth />)}
@@ -424,7 +424,7 @@ export default function ProfilePage() {
         </section>
 
         <section>
-          <h2 className="text-2xl font-bold mb-4">Internal Opportunities</h2>
+          <h2 className="lg:text-2xl text-xl font-bold mb-4">Internal Opportunities</h2>
           {isLoading ? (
             <div className="space-y-3">
               {[0, 1].map((i) => <SkeletonSignupRow key={i} />)}

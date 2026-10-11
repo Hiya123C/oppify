@@ -6,8 +6,8 @@ export default function AboutPage() {
       <Navbar />
 
       <div className="pt-32 pb-32 px-6 sm:px-10 max-w-4xl mx-auto">
-        <h1 className="text-4xl sm:text-5xl font-bold">About Us</h1>
-        <p className="text-lg text-gray-700 mt-2">
+        <h1 className="lg:text-5xl text-4xl font-bold">About Us</h1>
+        <p className="lg:text-lg text-md text-gray-700 mt-2">
           Oppify helps you discover opportunities, tailored to your preferences.
         </p>
 

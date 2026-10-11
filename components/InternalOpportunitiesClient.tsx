@@ -143,17 +143,17 @@ export default function InternalOpportunitiesClient({ opportunities }: InternalO
     <>
       <div className="pt-32 pb-32">
         <div className="px-6 sm:px-10 max-w-7xl mx-auto">
-          <h1 className="text-5xl font-bold text-left">Internal Opportunities</h1>
-          <p className="text-lg text-gray-700 text-left mt-1">
+          <h1 className="lg:text-5xl text-3xl font-bold text-left">Internal Opportunities</h1>
+          <p className="lg:text-lg text-md text-gray-700 text-left mt-1">
             Opportunities posted by student groups within RI!
           </p>
         </div>
 
         <section className="px-6 sm:px-10 max-w-7xl mx-auto mt-12">
-          <h3 className="text-3xl font-bold">Community Education Opportunities</h3>
+          <h3 className="lg:text-3xl text-2xl font-bold">Community Education Opportunities</h3>
           <p className="text-sm text-gray-600 mt-1 mb-6">Sign-up required</p>
           {communityEducation.length === 0 ? (
-            <p className="text-sm text-gray-500">Nothing open right now</p>
+            <p className="lg:text-sm text-xs text-gray-500">Nothing open right now</p>
           ) : (
             <div className={gridClass}>{communityEducation.map(renderCard)}</div>
           )}
@@ -168,7 +168,7 @@ export default function InternalOpportunitiesClient({ opportunities }: InternalO
         ) : null}
 
         <section className="px-6 sm:px-10 max-w-7xl mx-auto mt-16">
-          <h3 className="text-3xl font-bold">Miscellaneous</h3>
+          <h3 className="lg:text-3xl text-2xl font-bold">Miscellaneous</h3>
           <p className="text-sm text-gray-600 mt-1 mb-6">Surveys, performances and announcements, no sign up required!</p>
           {miscellaneous.length === 0 ? (
             <p className="text-sm text-gray-500">Nothing here yet</p>
