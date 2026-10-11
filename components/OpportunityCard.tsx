@@ -6,6 +6,7 @@ type OpportunityCardProps = {
   deadline?: string;
   category?: string;
   isFavorited?: boolean;
+  fullWidth?: boolean;
   onToggleFavorite?: () => void;
   onClick?: () => void;
 };
@@ -18,11 +19,12 @@ export default function OpportunityCard({
   isFavorited = false,
   onToggleFavorite,
   onClick,
+  fullWidth = false,
 }: OpportunityCardProps) {
   return (
     <div
       onClick={onClick}
-      className="w-72 shrink-0 cards rounded-2xl p-5 shadow-sm hover:shadow-md hover:scale-[1.05] transition-all duration-200 cursor-pointer"
+      className={`${fullWidth ? "w-full" : "w-72 shrink-0"} cards rounded-2xl p-5 shadow-sm hover:shadow-md hover:scale-[1.05] transition-all duration-200 cursor-pointer`}
     >
       <div className="flex flex-row justify-between items-start">
         {category && (

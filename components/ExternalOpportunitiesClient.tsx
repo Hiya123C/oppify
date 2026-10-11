@@ -244,13 +244,14 @@ export default function OpportunitiesClient({
       {showOnboarding && <OnboardingModal onComplete={handleOnboardingComplete} />}
       <div className="pt-32 pb-32">
         <div className="px-10 max-w-7xl mx-auto">
-          <h1 className="text-5xl font-bold text-left">Hello {userName || '...'}!</h1>
+          {/* <h1 className="text-5xl font-bold text-left">Hello {userName || '...'}!</h1> */}
+          <h1 className="text-5xl font-bold text-left">Hello there!</h1>
           <p className="text-lg text-gray-700 text-left mt-1">
             Find your next opportunity!
           </p>
         </div>
 
-        <ScrollingRow title="New" opportunities={normalizedNewOpportunities} favorites={favorites} onToggleFavorite={toggleFavorite} onSelect={setSelected} />
+        <ScrollingRow title="Currently open" opportunities={normalizedNewOpportunities} favorites={favorites} onToggleFavorite={toggleFavorite} onSelect={setSelected} />
         <ScrollingRow title="International" opportunities={normalizedInternationalOpportunities} favorites={favorites} onToggleFavorite={toggleFavorite} onSelect={setSelected} />
         <ScrollingRow title="National" opportunities={normalizedNationalOpportunities} favorites={favorites} onToggleFavorite={toggleFavorite} onSelect={setSelected} />
       </div>

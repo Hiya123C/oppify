@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Navbar from "@/components/Navbar";
 import OpportunityCard from "@/components/OpportunityCard";
+import OpportunityModal from "@/components/OpportunityModal";
 import { getDefaultProfile, readProfile, saveProfile } from "@/utils/profile";
 import { createClient } from "@/utils/supabase/client";
 
@@ -15,6 +16,9 @@ type FavoriteOpportunity = {
   description: string;
   deadline?: string;
   category?: string;
+  // type?: string;
+  link?: string;
+  requirements?: string[];
 };
 
 type SignupItem = {
@@ -25,6 +29,17 @@ type SignupItem = {
 
 const favoriteTableCandidates = ["external_favorites"];
 const signupTableCandidates = ["volunteer_signups"];
+
+function cleanLocalDigits(value: string) {
+  let digits = value.replace(/\D/g, "");
+  if (value.trim().startsWith("+65")) digits = digits.slice(2);
+  else if (digits.length === 10 && digits.startsWith("65")) digits = digits.slice(2);
+  return digits.slice(0, 8);
+}
+
+function storedToLocal(stored: string) {
+  return stored.startsWith("+65") ? stored.slice(3) : stored.replace(/\D/g, "").slice(0, 8);
+}
 
 function isMissingTableError(error: { message?: string } | null | undefined) {
   const message = error?.message?.toLowerCase() ?? "";
@@ -37,6 +52,7 @@ export default function ProfilePage() {
   const [selectedCategories, setSelectedCategories] = useState<Set<string>>(new Set(["Volunteering", "Workshop"]));
   const [favorites, setFavorites] = useState<FavoriteOpportunity[]>([]);
   const [signups, setSignups] = useState<SignupItem[]>([]);
+  const [selected, setSelected] = useState<FavoriteOpportunity | null>(null);
   const supabase = useMemo(() => createClient(), []);
 
   useEffect(() => {
@@ -111,7 +127,7 @@ export default function ProfilePage() {
         if (ids.length > 0) {
           const { data: opportunities } = await supabase
             .from("external_opportunities")
-            .select("id, title, description, deadline, category")
+            .select("id, title, description, deadline, category, type, link, requirements")
             .in("id", ids);
 
           if (opportunities) {
@@ -120,8 +136,11 @@ export default function ProfilePage() {
                 id: String(opp.id),
                 title: opp.title ?? "Untitled opportunity",
                 description: opp.description ?? "",
-                deadline: opp.deadline ?? undefined,
+                deadline: opp.deadline ?? "To be determined",
                 category: opp.category ?? undefined,
+                // type: opp.type ?? undefined,
+                link: opp.link ?? undefined,
+                requirements: opp.requirements ?? undefined,
               }))
             );
           } else {
@@ -154,17 +173,17 @@ export default function ProfilePage() {
     };
   }, [supabase]);
 
-  async function handleProfileChange(field: "name" | "email" | "contactNumber", value: string) {
-    const nextProfile = { ...profile, [field]: value };
-    setProfile(nextProfile);
+  // async function handleProfileChange(field: "name" | "email" | "contactNumber", value: string) {
+  //   const nextProfile = { ...profile, [field]: value };
+  //   setProfile(nextProfile);
 
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (!user) return;
+  //   const {
+  //     data: { user },
+  //   } = await supabase.auth.getUser();
+  //   if (!user) return;
 
-    await saveProfile(supabase, user.id, nextProfile);
-  }
+  //   await saveProfile(supabase, user.id, nextProfile);
+  // }
 
   function toggleCategory(cat: string) {
     setSelectedCategories((prev) => {
@@ -206,11 +225,51 @@ export default function ProfilePage() {
     setFavorites((prev) => prev.filter((opp) => opp.id !== id));
   }
 
+  const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved" | "error">("idle");
+  const [saveMessage, setSaveMessage] = useState("");
+
+  function handleNameChange(value: string) {
+    setProfile((p) => ({ ...p, name: value }));
+    setSaveStatus("idle");
+  }
+
+  function handlePhoneChange(value: string) {
+    const digits = cleanLocalDigits(value);
+    setProfile((p) => ({ ...p, contactNumber: digits ? `+65${digits}` : "" }));
+    setSaveStatus("idle");
+  }
+
+  async function handleSave() {
+    const digits = storedToLocal(profile.contactNumber);
+    if (digits && !/^[89]\d{7}$/.test(digits)) {
+      setSaveStatus("error");
+      setSaveMessage("Enter a valid 8-digit Singapore number starting with 8 or 9");
+      return;
+    }
+
+    setSaveStatus("saving");
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      setSaveStatus("error");
+      setSaveMessage("You're not logged in");
+      return;
+    }
+
+    const { error } = await saveProfile(supabase, user.id, profile);
+    if (error) {
+      console.error("save failed", error);
+      setSaveStatus("error");
+      setSaveMessage("Couldn't save, try again");
+    } else {
+      setSaveStatus("saved");
+    }
+  }
+
   return (
     <main className="relative min-h-screen w-full overflow-hidden">
       <Navbar />
 
-      <div className="pt-32 pb-32 px-6 sm:px-10 max-w-4xl mx-auto space-y-16">
+      <div className="pt-32 pb-32 px-6 sm:px-10 lg:px-16 max-w-5xl mx-auto space-y-16">
 
         <section>
           <h1 className="text-4xl font-bold mb-6">Your Profile</h1>
@@ -226,7 +285,7 @@ export default function ProfilePage() {
               <input
                 type="text"
                 value={profile.name}
-                onChange={(e) => handleProfileChange("name", e.target.value)}
+                onChange={(e) => handleNameChange(e.target.value)}
                 className="w-full mt-1 px-4 py-2 rounded-xl border border-gray-300 bg-white/70 focus:outline-none focus:ring-2 focus:ring-black/20"
               />
             </div>
@@ -236,19 +295,26 @@ export default function ProfilePage() {
               <input
                 type="email"
                 value={profile.email}
-                onChange={(e) => handleProfileChange("email", e.target.value)}
-                className="w-full mt-1 px-4 py-2 rounded-xl border border-gray-300 bg-white/70 focus:outline-none focus:ring-2 focus:ring-black/20"
+                readOnly
+                className="w-full mt-1 px-4 py-2 rounded-xl border border-gray-300 bg-gray-100 text-gray-500 cursor-not-allowed"
               />
             </div>
 
             <div>
               <label className="text-sm text-gray-700 font-bold">Contact number</label>
-              <input
-                type="tel"
-                value={profile.contactNumber}
-                onChange={(e) => handleProfileChange("contactNumber", e.target.value)}
-                className="w-full mt-1 px-4 py-2 rounded-xl border border-gray-300 bg-white/70 focus:outline-none focus:ring-2 focus:ring-black/20"
-              />
+              <div className="flex mt-1">
+                <span className="px-4 py-2 rounded-l-xl border border-r-0 border-gray-300 bg-gray-100 text-gray-600">
+                  +65
+                </span>
+                <input
+                  type="tel"
+                  inputMode="numeric"
+                  placeholder="91234567"
+                  value={storedToLocal(profile.contactNumber)}
+                  onChange={(e) => handlePhoneChange(e.target.value)}
+                  className="w-full px-4 py-2 rounded-r-xl border border-gray-300 bg-white/70 focus:outline-none focus:ring-2 focus:ring-black/20"
+                />
+              </div>
             </div>
 
             {/* <div>
@@ -271,6 +337,18 @@ export default function ProfilePage() {
                 </button>
               </div>
             </div> */}
+
+            <div className="flex items-center gap-3">
+              <button
+                onClick={handleSave}
+                disabled={saveStatus === "saving"}
+                className="bg-black text-white font-semibold py-2 px-5 rounded-xl hover:bg-gray-800 transition-all duration-200 disabled:opacity-50"
+              >
+                {saveStatus === "saving" ? "Saving..." : "Save"}
+              </button>
+              {saveStatus === "saved" && <span className="text-sm text-green-600">Saved!</span>}
+              {saveStatus === "error" && <span className="text-sm text-red-600">{saveMessage}</span>}
+            </div>
             </div>
           </div>
         </section>
@@ -304,9 +382,16 @@ export default function ProfilePage() {
           {favorites.length === 0 ? (
             <p className="text-sm text-gray-500">No favourites yet</p>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div className="grid grid-cols-[repeat(auto-fill,minmax(240px,1fr))] gap-4">
               {favorites.map((opp) => (
-                <OpportunityCard key={opp.id} {...opp} isFavorited onToggleFavorite={() => handleRemoveFavorite(opp.id)} />
+                <OpportunityCard
+                  key={opp.id}
+                  {...opp}
+                  fullWidth
+                  isFavorited
+                  onToggleFavorite={() => handleRemoveFavorite(opp.id)}
+                  onClick={() => setSelected(opp)}
+                />
               ))}
             </div>
           )}
@@ -333,6 +418,7 @@ export default function ProfilePage() {
         </section>
 
       </div>
+      <OpportunityModal opportunity={selected} onClose={() => setSelected(null)} />
     </main>
   );
 }

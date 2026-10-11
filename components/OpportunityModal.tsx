@@ -71,7 +71,7 @@ export default function OpportunityModal({
 
         <h2 className="text-2xl font-bold pr-8">{opportunity.title}</h2>
         <p className="text-gray-700 mt-3">{opportunity.description}</p>
-        <p className="text-sm text-gray-500 mt-4">Deadline: {opportunity.deadline ?? "TBD"}</p>
+        <p className="text-sm text-gray-500 mt-4">Deadline: {opportunity.deadline ?? "To be determined"}</p>
 
         {opportunity.requirements && opportunity.requirements.length > 0 && (
           <div className="mt-6">
