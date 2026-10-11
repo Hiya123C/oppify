@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import Navbar from "@/components/Navbar";
 import OpportunityCard from "@/components/OpportunityCard";
 import OpportunityModal from "@/components/OpportunityModal";
-import { getDefaultProfile, readProfile, saveProfile } from "@/utils/profile";
+import { getDefaultProfile, readProfile, saveProfile, cleanLocalDigits, storedToLocal } from "@/utils/profile";
 import { createClient } from "@/utils/supabase/client";
 
 
@@ -30,16 +30,16 @@ type SignupItem = {
 const favoriteTableCandidates = ["external_favorites"];
 const signupTableCandidates = ["volunteer_signups"];
 
-function cleanLocalDigits(value: string) {
-  let digits = value.replace(/\D/g, "");
-  if (value.trim().startsWith("+65")) digits = digits.slice(2);
-  else if (digits.length === 10 && digits.startsWith("65")) digits = digits.slice(2);
-  return digits.slice(0, 8);
-}
+// function cleanLocalDigits(value: string) {
+//   let digits = value.replace(/\D/g, "");
+//   if (value.trim().startsWith("+65")) digits = digits.slice(2);
+//   else if (digits.length === 10 && digits.startsWith("65")) digits = digits.slice(2);
+//   return digits.slice(0, 8);
+// }
 
-function storedToLocal(stored: string) {
-  return stored.startsWith("+65") ? stored.slice(3) : stored.replace(/\D/g, "").slice(0, 8);
-}
+// function storedToLocal(stored: string) {
+//   return stored.startsWith("+65") ? stored.slice(3) : stored.replace(/\D/g, "").slice(0, 8);
+// }
 
 function isMissingTableError(error: { message?: string } | null | undefined) {
   const message = error?.message?.toLowerCase() ?? "";
@@ -342,7 +342,7 @@ export default function ProfilePage() {
               <button
                 onClick={handleSave}
                 disabled={saveStatus === "saving"}
-                className="bg-black text-white font-semibold py-2 px-5 rounded-xl hover:bg-gray-800 transition-all duration-200 disabled:opacity-50"
+                className="bg-[var(--mid-blue)] text-white font-semibold py-2 px-5 rounded-xl hover:bg-gray-800 transition-all duration-200 disabled:opacity-50"
               >
                 {saveStatus === "saving" ? "Saving..." : "Save"}
               </button>

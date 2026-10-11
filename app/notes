@@ -12,9 +12,6 @@ set aside the email part first, handle the main functions first
 
 stuff to do:
 - kill the email part for now, jsut use personal email.
-- put in ACTUAL backend data and comps + change the cateogrisation
-    - pt.1 is DONE! need to fix the requirement array part, omg luckily the csv thing worked
-- handle the internal opportunities? (volunteer shit)
 - onboarding. haha.
 - kill the "Your interests", too difficult to AI/ML for now.
 - OH MY GOD RESPONSIVENESSSSSS FUCKKKKKK

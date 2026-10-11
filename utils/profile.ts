@@ -51,3 +51,14 @@ export async function saveProfile(
 
   return { error };
 }
+
+export function cleanLocalDigits(value: string) {
+  let digits = value.replace(/\D/g, "");
+  if (value.trim().startsWith("+65")) digits = digits.slice(2);
+  else if (digits.length === 10 && digits.startsWith("65")) digits = digits.slice(2);
+  return digits.slice(0, 8);
+}
+
+export function storedToLocal(stored: string) {
+  return stored.startsWith("+65") ? stored.slice(3) : stored.replace(/\D/g, "").slice(0, 8);
+}

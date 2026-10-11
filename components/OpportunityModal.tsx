@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from "react";
+import { cleanLocalDigits, storedToLocal } from "@/utils/profile";
 
 type Opportunity = {
   id: string;
@@ -39,12 +40,16 @@ export default function OpportunityModal({
   const [name, setName] = useState(defaultName);
   const [email, setEmail] = useState(defaultEmail);
   const [contactNumber, setContactNumber] = useState(defaultContactNumber);
+  const [phoneError, setPhoneError] = useState("");
 
   useEffect(() => {
     setName(defaultName);
     setEmail(defaultEmail);
-    setContactNumber(defaultContactNumber);
+    // setContactNumber(defaultContactNumber);
+    setContactNumber(storedToLocal(defaultContactNumber));
   }, [defaultName, defaultEmail, defaultContactNumber, opportunity?.id]);
+
+
 
   if (!opportunity) return null;
 
@@ -54,7 +59,16 @@ export default function OpportunityModal({
   }
 
   function handleConfirmSignup() {
-    onPrimaryAction?.(opportunity!, { name, email, contactNumber });
+    if (contactNumber && !/^[89]\d{7}$/.test(contactNumber)) {
+      setPhoneError("Enter a valid 8-digit Singapore number starting with 8 or 9");
+      return;
+    }
+    setPhoneError("");
+    onPrimaryAction?.(opportunity!, {
+      name,
+      email,
+      contactNumber: contactNumber ? `+65${contactNumber}` : "",
+    });
     setShowConfirm(false);
   }
 
@@ -122,13 +136,22 @@ export default function OpportunityModal({
                 onChange={(e) => setEmail(e.target.value)}
                 className="border border-gray-300 rounded-xl px-4 py-2 bg-white/80 focus:outline-none focus:ring-2 focus:ring-black/20 transition-all duration-200"
               />
-              <input
-                type="tel"
-                placeholder="Your contact number"
-                value={contactNumber}
-                onChange={(e) => setContactNumber(e.target.value)}
-                className="border border-gray-300 rounded-xl px-4 py-2 bg-white/80 focus:outline-none focus:ring-2 focus:ring-black/20 transition-all duration-200"
-              />
+              <div>
+                <div className="flex">
+                  <span className="px-4 py-2 rounded-l-xl border border-r-0 border-gray-300 bg-gray-100 text-gray-600">
+                    +65
+                  </span>
+                  <input
+                    type="tel"
+                    inputMode="numeric"
+                    placeholder="91234567"
+                    value={contactNumber}
+                    onChange={(e) => { setContactNumber(cleanLocalDigits(e.target.value)); setPhoneError(""); }}
+                    className="w-full border border-gray-300 rounded-r-xl px-4 py-2 bg-white/80 focus:outline-none focus:ring-2 focus:ring-black/20 transition-all duration-200"
+                  />
+                </div>
+                {phoneError && <p className="text-xs text-red-600 mt-1">{phoneError}</p>}
+              </div>
             </div>
 
             <div className="flex gap-3 mt-4">
