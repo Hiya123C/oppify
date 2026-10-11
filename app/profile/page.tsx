@@ -6,6 +6,7 @@ import OpportunityCard from "@/components/OpportunityCard";
 import OpportunityModal from "@/components/OpportunityModal";
 import { getDefaultProfile, readProfile, saveProfile, cleanLocalDigits, storedToLocal } from "@/utils/profile";
 import { createClient } from "@/utils/supabase/client";
+import { SkeletonCard, SkeletonSignupRow } from "@/components/Skeletons";
 
 
 const categories = ["Volunteering", "Hackathon", "Scholarship", "Workshop", "Competition", "Leadership", "Research", "Internship", "STEM", "Computing", "Humanities", "Arts", "Sports", "Community Service"];
@@ -53,6 +54,7 @@ export default function ProfilePage() {
   const [favorites, setFavorites] = useState<FavoriteOpportunity[]>([]);
   const [signups, setSignups] = useState<SignupItem[]>([]);
   const [selected, setSelected] = useState<FavoriteOpportunity | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const supabase = useMemo(() => createClient(), []);
 
   useEffect(() => {
@@ -166,7 +168,9 @@ export default function ProfilePage() {
       }
     }
 
-    loadProfileData();
+    loadProfileData().finally(() => {
+      if (isActive) setIsLoading(false);
+    });
 
     return () => {
       isActive = false;
@@ -342,7 +346,7 @@ export default function ProfilePage() {
               <button
                 onClick={handleSave}
                 disabled={saveStatus === "saving"}
-                className="bg-[var(--mid-blue)] text-white font-semibold py-2 px-5 rounded-xl hover:bg-gray-800 transition-all duration-200 disabled:opacity-50"
+                className="bg-[var(--mid-blue)] text-white font-semibold py-2 px-5 rounded-xl hover:brightness-90 transition-all duration-200 disabled:opacity-50"
               >
                 {saveStatus === "saving" ? "Saving..." : "Save"}
               </button>
@@ -379,7 +383,11 @@ export default function ProfilePage() {
 
         <section>
           <h2 className="text-2xl font-bold mb-4">Your Favourites</h2>
-          {favorites.length === 0 ? (
+          {isLoading ? (
+            <div className="grid grid-cols-[repeat(auto-fill,minmax(240px,1fr))] gap-4">
+              {[0, 1, 2].map((i) => <SkeletonCard key={i} fullWidth />)}
+            </div>
+          ) : favorites.length === 0 ? (
             <p className="text-sm text-gray-500">No favourites yet</p>
           ) : (
             <div className="grid grid-cols-[repeat(auto-fill,minmax(240px,1fr))] gap-4">
@@ -399,7 +407,11 @@ export default function ProfilePage() {
 
         <section>
           <h2 className="text-2xl font-bold mb-4">Internal Opportunities</h2>
-          {signups.length === 0 ? (
+          {isLoading ? (
+            <div className="space-y-3">
+              {[0, 1].map((i) => <SkeletonSignupRow key={i} />)}
+            </div>
+          ) : signups.length === 0 ? (
             <p className="text-sm text-gray-500">You haven't signed up for anything yet</p>
           ) : (
             <div className="space-y-3">

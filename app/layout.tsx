@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Background from "@/components/Background";
+import { Inter } from "next/font/google";
+import { cn } from "@/lib/utils";
+
+const inter = Inter({subsets:['latin'],variable:'--font-sans'});
 
 export const metadata: Metadata = {
   title: "Oppify",
@@ -13,7 +17,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-full antialiased">
+    <html lang="en" className={cn("h-full antialiased", "font-sans", inter.variable)}>
       <head>
         {/* Inject Google Icons Link Here */}
         <link
