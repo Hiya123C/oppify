@@ -56,6 +56,7 @@ export default function ProfilePage() {
   const [selected, setSelected] = useState<FavoriteOpportunity | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const supabase = useMemo(() => createClient(), []);
+  const [showSetup, setShowSetup] = useState(false);
 
   useEffect(() => {
     let isActive = true;
@@ -77,6 +78,9 @@ export default function ProfilePage() {
 
       const loadedProfile = await readProfile(supabase, user.id);
       if (isActive) setProfile(loadedProfile);
+      if (isActive && (!loadedProfile.name || !loadedProfile.contactNumber)) {
+        setShowSetup(true);
+      }
 
       let favoriteRows: Array<{ opportunity_id: string | number }> | null = null;
       let favoriteError: { message?: string } | null = null;
@@ -266,6 +270,7 @@ export default function ProfilePage() {
       setSaveMessage("Couldn't save, try again");
     } else {
       setSaveStatus("saved");
+      setShowSetup(false);
     }
   }
 
@@ -278,6 +283,19 @@ export default function ProfilePage() {
         <section>
           <h1 className="text-4xl font-bold mb-6">Your Profile</h1>
 
+          {/* for onboarding */}
+          {showSetup && (
+            <div className="cards rounded-2xl p-4 mb-4 flex items-start gap-3 border border-[var(--mid-blue)]">
+              <span className="material-symbols-outlined text-[var(--mid-blue)]">waving_hand</span>
+              <div>
+                <p className="font-semibold">Let's finish setting up!</p>
+                <p className="text-sm text-gray-600">
+                  Add your name and contact number below, then hit Save. You'll only need to do this once, and it pre-fills your sign-ups.
+                </p>
+              </div>
+            </div>
+          )}
+
           <div className="cards rounded-2xl p-6">
             <h3 className="text-xl font-bold">Personal Information</h3>
             <p className="text-sm text-gray-600">
@@ -285,12 +303,12 @@ export default function ProfilePage() {
             </p>
             <div className="space-y-4">
             <div>
-              <label className="text-sm text-gray-700 font-bold">Name (Actual name)</label>
+              <label className="text-sm text-gray-700 font-bold ">Name (Actual name)</label>
               <input
                 type="text"
                 value={profile.name}
                 onChange={(e) => handleNameChange(e.target.value)}
-                className="w-full mt-1 px-4 py-2 rounded-xl border border-gray-300 bg-white/70 focus:outline-none focus:ring-2 focus:ring-black/20"
+                className={`${showSetup && !profile.name ? "ring-2 ring-[var(--mid-blue)]" : ""} w-full mt-1 px-4 py-2 rounded-xl border border-gray-300 bg-white/70 focus:outline-none focus:ring-2 focus:ring-black/20`}
               />
             </div>
 
@@ -316,7 +334,7 @@ export default function ProfilePage() {
                   placeholder="91234567"
                   value={storedToLocal(profile.contactNumber)}
                   onChange={(e) => handlePhoneChange(e.target.value)}
-                  className="w-full px-4 py-2 rounded-r-xl border border-gray-300 bg-white/70 focus:outline-none focus:ring-2 focus:ring-black/20"
+                  className={`${showSetup && !profile.contactNumber ? "ring-2 ring-[var(--mid-blue)]" : ""} w-full px-4 py-2 rounded-r-xl border border-gray-300 bg-white/70 focus:outline-none focus:ring-2 focus:ring-black/20`}
                 />
               </div>
             </div>

@@ -14,7 +14,7 @@
   --mid-blue: #4CA2F3;
   --bright-yellow: #ffe96f;
   --muted-yellow: #ffd571;
-  
+
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
@@ -194,4 +194,13 @@ body {
   html {
     @apply font-sans;
   }
+}
+
+@keyframes slide-in-next { from { opacity: 0; transform: translateX(24px); }  to { opacity: 1; transform: none; } }
+@keyframes slide-in-prev { from { opacity: 0; transform: translateX(-24px); } to { opacity: 1; transform: none; } }
+.slide-next { animation: slide-in-next 250ms ease-out; }
+.slide-prev { animation: slide-in-prev 250ms ease-out; }
+
+@media (prefers-reduced-motion: reduce) {
+  .slide-next, .slide-prev { animation: none; }
 }

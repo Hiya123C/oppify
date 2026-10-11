@@ -8,6 +8,8 @@ import { createClient } from "@/utils/supabase/client";
 import { readProfile } from "@/utils/profile";
 import OnboardingModal from "./OnboardingModal";
 
+import { useRouter } from "next/navigation";
+
 type Opportunity = {
   id: string;
   title: string;
@@ -47,6 +49,7 @@ export default function OpportunitiesClient({
   const [search, setSearch] = useState("");
   const [selected, setSelected] = useState<Opportunity | null>(null);
   const supabase = useMemo(() => createClient(), []);
+  const router = useRouter();
 
   useEffect(() => {
     let isActive = true;
@@ -235,8 +238,10 @@ export default function OpportunitiesClient({
   async function handleOnboardingComplete() {
     setShowOnboarding(false);
     if (userId) {
-      await supabase.from("profiles").upsert({ id: userId, has_onboarded: true });
+      const { error } = await supabase.from("profiles").upsert({ id: userId, has_onboarded: true });
+      if (error) console.error("onboarding flag failed", error);
     }
+    router.push("/profile");
   }
 
   return (

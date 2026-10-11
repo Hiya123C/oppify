@@ -26,19 +26,19 @@ export default function Page() {
         <div className="flex flex-row items-center gap-6">
           {!showLogin ? (
             <button onClick={() => setShowLogin(true)}
-            className="cards font-semibold py-3 px-6 rounded-lg shadow hover:bg-white/70 transition-all duration-200 animate-popup cursor-pointer"
+            className="cards font-semibold py-3 px-10 rounded-lg shadow hover:bg-white/70 transition-all duration-200 animate-popup cursor-pointer"
             >
               Log In
             </button>
           ) : (
             <LoginForm onCancel={() => setShowLogin(false)} />
           )}
-          <Link
+          {/* <Link
           href="/opportunities"
           className="bg-white/50 backdrop-blur-md hover:bg-gray-100 text-gray-800 font-semibold py-3 px-6 border border-gray-400 rounded-lg shadow"
           >
             For Devs only
-          </Link>
+          </Link> */}
         </div>
       </div>
     </main>
