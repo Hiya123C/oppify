@@ -79,7 +79,6 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
           )}
         </div>
 
-        {/* Slide content: key forces the animation to replay on each slide */}
         <div key={index} className={`min-h-[13rem] sm:min-h-[12rem] ${direction === "next" ? "slide-next" : "slide-prev"}`}>
           <span className="material-symbols-outlined text-4xl text-[var(--mid-blue)] mb-3 block">
             {slide.icon}
@@ -88,7 +87,6 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
           <p className="text-sm sm:text-base text-gray-700">{slide.body}</p>
         </div>
 
-        {/* Dots (tap to jump) */}
         <div className="flex justify-center gap-2 my-6">
           {slides.map((_, i) => (
             <button
